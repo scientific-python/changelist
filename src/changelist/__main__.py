@@ -329,10 +329,11 @@ We're happy to announce the release of {repo_name} {version}!
         self, title: str, pull_requests: set[PullRequest]
     ) -> Iterable[str]:
         """Format a section title and list its pull requests sorted by merge date."""
-        yield from self._format_section_title(title, level=2)
-        for pr in sorted(pull_requests, key=lambda pr: pr.merged_at):
-            yield from self._format_pull_request(pr)
-        yield "\n"
+        if pull_requests:
+            yield from self._format_section_title(title, level=2)
+            for pr in sorted(pull_requests, key=lambda pr: pr.merged_at):
+                yield from self._format_pull_request(pr)
+            yield "\n"
 
     def _format_user_line(self, user: Union[NamedUser]) -> str:
         line = f"@{user.login}"
@@ -468,7 +469,7 @@ def main(
     requests_cache.install_cache(
         REQUESTS_CACHE_PATH, backend="sqlite", expire_after=3600
     )
-    print(f"Using requests cache at {REQUESTS_CACHE_PATH}")
+    print(f"Using requests cache at {REQUESTS_CACHE_PATH}", file=sys.stderr)
     if clear_cache:
         requests_cache.clear()
         logger.info("cleared requests cache at %s", REQUESTS_CACHE_PATH)

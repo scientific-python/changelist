@@ -1,6 +1,6 @@
 # changelist
 
-Prepare an automatic changelog from GitHub pull requests 
+Prepare an automatic changelog from GitHub pull requests
 
 _This project is currently in its alpha stage and might be incomplete or change a lot!_
 

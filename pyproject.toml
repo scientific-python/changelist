@@ -30,3 +30,19 @@ dependencies = [
 
 [project.scripts]
 changelist = "changelist.__main__:main"
+
+[project.optional-dependencies]
+lint = ["pre-commit == 3.3"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py39"
+select = [
+    "C",
+    "E",
+    "F",
+    "W",
+    "B",
+    "I",
+    "UP",
+]

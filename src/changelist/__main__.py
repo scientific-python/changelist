@@ -220,8 +220,8 @@ class MdFormatter:
 We're happy to announce the release of {repo_name} {version}!
 """
     outro_template: str = (
-        "*These lists are automatically generated, and may not be complete or may "
-        "contain duplicates.*\n"
+        "_These lists are automatically generated, and may not be complete or may "
+        "contain duplicates._\n"
     )
     # Associate regexes matching PR labels to a section titles in the release notes
     regex_section_map: tuple[tuple[str, str], ...] = (

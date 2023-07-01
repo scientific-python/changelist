@@ -15,5 +15,5 @@ pip install changelist
 
 ```sh
 export GH_TOKEN='...'
-changelog scikit-image/scikit-image v0.21 main
+changelist scikit-image/scikit-image v0.21.0 main
 ```

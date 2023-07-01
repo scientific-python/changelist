@@ -1,27 +1,26 @@
 """Prepare an automatic changelog from GitHub's pull requests."""
 
 
+import argparse
+import json
+import logging
 import os
 import re
 import sys
-import argparse
-import logging
 import tempfile
-import json
-from pathlib import Path
-from dataclasses import dataclass
-from typing import Callable, Union
-from collections.abc import Iterable
 from collections import OrderedDict
+from collections.abc import Iterable
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Callable, Union
 
 import requests
 import requests_cache
-from tqdm import tqdm
 from github import Github
-from github.PullRequest import PullRequest
-from github.NamedUser import NamedUser
 from github.Commit import Commit
-
+from github.NamedUser import NamedUser
+from github.PullRequest import PullRequest
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
@@ -148,8 +147,8 @@ class GitHubGraphQl:
                 self.PAGE_LIMIT,
             )
 
-        coauthors = dict()
-        for i, edge in enumerate(edges):
+        coauthors = {}
+        for _i, edge in enumerate(edges):
             node = edge["node"]
             user = node["user"]
             if user is None:
@@ -365,7 +364,9 @@ We're happy to announce the release of {repo_name} {version}!
         yield "\n"
 
     def _format_intro(self):
-        intro = self.intro_template.format(repo_name=self.repo_name, version=self.version)
+        intro = self.intro_template.format(
+            repo_name=self.repo_name, version=self.version
+        )
         # Make sure to return exactly one line at a time
         yield from (f"{line}\n" for line in intro.split("\n"))
 

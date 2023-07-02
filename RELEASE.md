@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Example `version`
+Example `version number`
 
 - 1.8.dev0 # development version of 1.8 (release candidate 1)
 - 1.8rc1 # 1.8 release candidate 1
@@ -12,22 +12,29 @@ Example `version`
 
 ## Process
 
-- Update and review `CHANGELOG.md`:
+- Set release variables:
 
-      changelist scientific-python/changelist <v0.0> main --version <0.1> >> CHANGELOG.md
+      export VERSION=<version number>
+      export PREVIOUS=<previous version number>
+      export ORG="scientific-python"
+      export REPO="changelist"
 
-  where <v0.0> is the last release and <0.1> is the new one.
+- Autogenerate release notes
+
+      changelist ${ORG}/${REPO} v${PREVIOUS} main --version ${VERSION}
+
+- Put the output of the above command at the top of `CHANGELOG.md`
 
 - Update `version` in `pyproject.toml`.
 
 - Commit changes:
 
       git add pyproject.toml CHANGELOG.md
-      git commit -m 'Designate <version> release'
+      git commit -m "Designate ${VERSION} release"
 
-- Add the version number (e.g., `1.2.0`) as a tag in git:
+- Tag the release in git:
 
-      git tag -s [-u <key-id>] v<version> -m 'signed <version> tag'
+      git tag -s v${VERSION} -m "signed ${VERSION} tag"
 
   If you do not have a gpg key, use -u instead; it is important for
   Debian packaging that the tags are annotated
@@ -48,7 +55,7 @@ Example `version`
       git clean -fxd
       pip install -U build twine wheel
       python -m build --sdist --wheel
-      twine upload -s dist/*
+      twine upload dist/*
 
 - Update `version` in `pyproject.toml`.
 

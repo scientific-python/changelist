@@ -22,7 +22,8 @@ dependencies = [
     "requests",
     "requests-cache",
     "tqdm",
-    "PyGithub"
+    "PyGithub",
+    'tomli',  # remove and replace with tomllib once Python 3.11 is minimal dependency
 ]
 
 [project.urls]

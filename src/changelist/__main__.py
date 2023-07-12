@@ -16,6 +16,7 @@ from typing import Callable, Union
 
 import requests
 import requests_cache
+import tomli
 from github import Github
 from github.Commit import Commit
 from github.NamedUser import NamedUser
@@ -205,6 +206,25 @@ def contributors(
     return authors, reviewers
 
 
+def pyproject_dependencies(
+    gh: Github,
+    org_repo: str,
+    rev: str,
+):
+    """Fetch runtime dependencies from pyproject.toml at the given revision."""
+    repo = gh.get_repo(org_repo)
+    file = repo.get_contents("pyproject.toml", ref=rev)
+    meta_data = tomli.loads(file.decoded_content.decode())
+
+    runtime_dependencies = []
+    python_dep = meta_data.get("project", {}).get("requires-python")
+    if python_dep:
+        runtime_dependencies += [f"python{python_dep}"]
+    runtime_dependencies += meta_data.get("project", {}).get("dependencies", [])
+
+    return runtime_dependencies
+
+
 @dataclass(frozen=True, kw_only=True)
 class MdFormatter:
     """Format release notes in Markdown from PRs, authors and reviewers."""
@@ -213,6 +233,7 @@ class MdFormatter:
     pull_requests: set[PullRequest]
     authors: set[Union[NamedUser]]
     reviewers: set[NamedUser]
+    runtime_dependencies: list[str]
 
     version: str = "x.y.z"
     title_template: str = "{repo_name} {version}"
@@ -262,6 +283,7 @@ We're happy to announce the release of {repo_name} {version}!
         yield from self._format_intro()
         for title, pull_requests in self._prs_by_section.items():
             yield from self._format_pr_section(title, pull_requests)
+        yield from self._format_dependencies_section(self.runtime_dependencies)
         yield from self._format_contributor_section(self.authors, self.reviewers)
         yield from self._format_outro()
 
@@ -341,6 +363,17 @@ We're happy to announce the release of {repo_name} {version}!
         if user.name:
             line = f"{user.name} ({line})"
         return line + ",\n"
+
+    def _format_dependencies_section(self, runtime_dependencies):
+        """Format dependencies section."""
+        if runtime_dependencies:
+            yield from self._format_section_title("Dependencies", level=2)
+            yield "\n"
+
+            yield "These dependencies are required at runtime if PyPI is used:\n"
+            for dep in runtime_dependencies:
+                yield self._sanitize_text(f"- `{dep}`") + "\n"
+            yield "\n"
 
     def _format_contributor_section(
         self,
@@ -495,6 +528,8 @@ def main(
         commits=lazy_tqdm(commits, desc="Fetching authors"),
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
+    print("Fetching dependencies from pyproject.toml...")
+    runtime_dependencies = pyproject_dependencies(gh, org_repo, stop_rev)
 
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
     formatter = Formatter(
@@ -503,6 +538,7 @@ def main(
         authors=authors,
         reviewers=reviewers,
         version=version,
+        runtime_dependencies=runtime_dependencies,
     )
 
     if out:

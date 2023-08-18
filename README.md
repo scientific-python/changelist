@@ -41,8 +41,10 @@ on:
   pull_request:
     types:
       - opened
+      - repoened
       - labeled
       - unlabeled
+      - synchronize
 
 env:
   LABELS: ${{ join( github.event.pull_request.labels.*.name, ' ' ) }}

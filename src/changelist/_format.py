@@ -146,7 +146,7 @@ We're happy to announce the release of {repo_name} {version}!
         line = self._format_link(line, user.html_url)
         if user.name:
             line = f"{user.name} ({line})"
-        return line + ",\n"
+        return f"- {line}\n"
 
     def _format_contributor_section(
         self,

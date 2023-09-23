@@ -126,10 +126,10 @@ We're happy to announce the release of {repo_name} {version}!
         return summary
 
     def _format_pull_request(self, pr: PullRequest) -> Iterable[str]:
-        summary = self._parse_pull_request_summary(pr).rstrip(".")
-        yield f"- {summary}\n"
         link = self._format_link(f"#{pr.number}", f"{pr.html_url}")
-        yield f"  ({link}).\n"
+        summary = self._parse_pull_request_summary(pr).rstrip(".")
+        summary = f"- {summary} ({link}).\n"
+        yield summary
 
     def _format_pr_section(
         self, title: str, pull_requests: set[PullRequest]

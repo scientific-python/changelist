@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import re
 import sys
 import tempfile
 from pathlib import Path
@@ -10,6 +11,7 @@ import requests_cache
 from github import Github
 from tqdm import tqdm
 
+from ._config import parse_pyproject_config, try_remote_pyproject_config
 from ._format import MdFormatter, RstFormatter
 from ._query import commits_between, contributors, pull_requests_from_commits
 
@@ -57,7 +59,7 @@ def parse_command_line(func: Callable) -> Callable:
     )
     parser.add_argument(
         "--version",
-        default="0.0.0",
+        default="x.y.z",
         help="Version you're about to release, used title and description of the notes",
     )
     parser.add_argument("--out", help="Write to file, prints to STDOUT otherwise")
@@ -71,6 +73,12 @@ def parse_command_line(func: Callable) -> Callable:
         "--clear-cache",
         action="store_true",
         help="Clear cached requests to GitHub's API before running",
+    )
+    parser.add_argument(
+        "--config",
+        dest="config_path",
+        help="Path to local TOML configuration (falls back on remote "
+        "pyproject.toml or default config if not given)",
     )
     parser.add_argument(
         "-v",
@@ -98,6 +106,7 @@ def main(
     out: str,
     format: str,
     clear_cache: bool,
+    config_path: str,
     verbose: int,
 ):
     """Main function of the script.
@@ -137,6 +146,13 @@ def main(
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
 
+    if config_path is not None:
+        with Path(config_path).open("r") as io:
+            pyproject = io.read()
+    else:
+        pyproject = try_remote_pyproject_config(gh, org_repo, rev=stop_rev)
+    config = parse_pyproject_config(pyproject)
+
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
     formatter = Formatter(
         repo_name=org_repo.split("/")[-1],
@@ -144,6 +160,12 @@ def main(
         authors=authors,
         reviewers=reviewers,
         version=version,
+        title_template=config["title_template"],
+        intro_template=config["intro_template"],
+        outro_template=config["outro_template"],
+        label_section_map=config["label_section_map"],
+        pr_summary_regex=re.compile(config["pr_summary_regex"], flags=re.MULTILINE),
+        ignored_user_logins=config["ignored_user_logins"],
     )
 
     if out:

@@ -20,31 +20,15 @@ class MdFormatter:
     authors: set[Union[NamedUser]]
     reviewers: set[NamedUser]
 
-    version: str = "x.y.z"
-    title_template: str = "{repo_name} {version}"
-    intro_template: str = """
-We're happy to announce the release of {repo_name} {version}!
-"""
-    outro_template: str = (
-        "_These lists are automatically generated, and may not be complete or may "
-        "contain duplicates._\n"
-    )
+    version: str
+    title_template: str
+    intro_template: str
+    outro_template: str
+
     # Associate regexes matching PR labels to a section titles in the release notes
-    regex_section_map: tuple[tuple[str, str], ...] = (
-        (".*Highlight.*", "Highlights"),
-        (".*New feature.*", "New Features"),
-        (".*Enhancement.*", "Enhancements"),
-        (".*Performance.*", "Performance"),
-        (".*Bug fix.*", "Bug Fixes"),
-        (".*API.*", "API Changes"),
-        (".*Maintenance.*", "Maintenance"),
-        (".*Documentation.*", "Documentation"),
-        (".*Infrastructure.*", "Infrastructure"),
-    )
-    ignored_user_logins: tuple[str] = ("web-flow",)
-    pr_summary_regex = re.compile(
-        r"^```release-note\s*(?P<summary>[\s\S]*?\w[\s\S]*?)\s*^```", flags=re.MULTILINE
-    )
+    label_section_map: dict[str, str]
+    pr_summary_regex: re.Pattern
+    ignored_user_logins: tuple[str]
 
     def __str__(self) -> str:
         """Return complete release notes document as a string."""
@@ -80,10 +64,10 @@ We're happy to announce the release of {repo_name} {version}!
         """
         label_section_map = {
             re.compile(pattern): section_name
-            for pattern, section_name in self.regex_section_map
+            for pattern, section_name in self.label_section_map.items()
         }
         prs_by_section = OrderedDict()
-        for _, section_name in self.regex_section_map:
+        for _, section_name in self.label_section_map.items():
             prs_by_section[section_name] = set()
         prs_by_section["Other"] = set()
 

@@ -162,7 +162,9 @@ class MdFormatter:
         yield from (f"{line}\n" for line in intro.split("\n"))
 
     def _format_outro(self) -> Iterable[str]:
-        outro = self.outro_template
+        outro = self.outro_template.format(
+            repo_name=self.repo_name, version=self.version
+        )
         # Make sure to return exactly one line at a time
         yield from (f"{line}\n" for line in outro.split("\n"))
 

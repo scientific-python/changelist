@@ -1,0 +1,24 @@
+# Default configuration as supported in pyproject.toml
+
+[tool.changelist]
+title_template = "{repo_name} {version}"
+intro_template = "We're happy to announce the release of {repo_name} {version}!"
+outro_template = """
+_These lists are automatically generated, and may not be complete or may contain
+duplicates._
+"""
+ignored_user_logins = [
+    "web-flow",
+]
+pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*^```"
+
+[tool.changelist.label_section_map]
+".*Highlight.*" = "Highlights"
+".*New feature.*" = "New Features"
+".*Enhancement.*" = "Enhancements"
+".*Performance.*" = "Performance"
+".*Bug fix.*" = "Bug Fixes"
+".*API.*" = "API Changes"
+".*Maintenance.*" = "Maintenance"
+".*Documentation.*" = "Documentation"
+".*Infrastructure.*" = "Infrastructure"

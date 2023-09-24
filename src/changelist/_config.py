@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 from github import Github, UnknownObjectException
 
@@ -9,34 +10,13 @@ except ModuleNotFoundError:
 
 logger = logging.getLogger(__name__)
 
-
-DEFAULT_CONFIG = r'''
-[tool.changelist]
-title_template = "{repo_name} {version}"
-intro_template = "We're happy to announce the release of {repo_name} {version}!"
-outro_template = """
-_These lists are automatically generated, and may not be complete or may contain
-duplicates._
-"""
-ignored_user_logins = [
-    "web-flow",
-]
-pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*^```"
-
-[tool.changelist.label_section_map]
-".*Highlight.*" = "Highlights"
-".*New feature.*" = "New Features"
-".*Enhancement.*" = "Enhancements"
-".*Performance.*" = "Performance"
-".*Bug fix.*" = "Bug Fixes"
-".*API.*" = "API Changes"
-".*Maintenance.*" = "Maintenance"
-".*Documentation.*" = "Documentation"
-".*Infrastructure.*" = "Infrastructure"
-'''
+here = Path(__file__)
 
 
-def try_remote_pyproject_config(gh: Github, org_repo: str, *, rev: str) -> str:
+DEFAULT_CONFIG_PATH = here.parent / "default_config.toml"
+
+
+def remote_config(gh: Github, org_repo: str, *, rev: str):
     repo = gh.get_repo(org_repo)
     try:
         file = repo.get_contents("pyproject.toml", ref=rev)
@@ -44,12 +24,24 @@ def try_remote_pyproject_config(gh: Github, org_repo: str, *, rev: str) -> str:
         content = file.decoded_content.decode()
     except UnknownObjectException:
         content = ""
-    return content
+    config = tomllib.loads(content)
+    config = config.get("tool", {}).get("changelist", {})
+    return config
 
 
-def parse_pyproject_config(content: str, default_config: str = DEFAULT_CONFIG) -> dict:
-    config = tomllib.loads(content).get("tool", {}).get("changelist", {})
-    defaults = tomllib.loads(default_config)["tool"]["changelist"]
+def local_config(path: Path) -> dict:
+    with path.open("rb") as fp:
+        config = tomllib.load(fp)
+    config = config.get("tool", {}).get("changelist", {})
+    return config
+
+
+def add_config_defaults(
+    config: dict, *, default_config_path: Path = DEFAULT_CONFIG_PATH
+) -> dict:
+    with default_config_path.open("rb") as fp:
+        defaults = tomllib.load(fp)
+    defaults = defaults["tool"]["changelist"]
     for key, value in defaults.items():
         if key not in config:
             config[key] = value

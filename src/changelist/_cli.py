@@ -11,7 +11,7 @@ import requests_cache
 from github import Github
 from tqdm import tqdm
 
-from ._config import parse_pyproject_config, try_remote_pyproject_config
+from ._config import add_config_defaults, local_config, remote_config
 from ._format import MdFormatter, RstFormatter
 from ._query import commits_between, contributors, pull_requests_from_commits
 
@@ -134,6 +134,12 @@ def main(
         )
     gh = Github(gh_token)
 
+    if config_path is None:
+        config = remote_config(gh, org_repo, rev=stop_rev)
+    else:
+        config = local_config(Path(config_path))
+    config = add_config_defaults(config)
+
     print("Fetching commits...", file=sys.stderr)
     commits = commits_between(gh, org_repo, start_rev, stop_rev)
     pull_requests = pull_requests_from_commits(
@@ -145,13 +151,6 @@ def main(
         commits=lazy_tqdm(commits, desc="Fetching authors"),
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
-
-    if config_path is not None:
-        with Path(config_path).open("r") as io:
-            pyproject = io.read()
-    else:
-        pyproject = try_remote_pyproject_config(gh, org_repo, rev=stop_rev)
-    config = parse_pyproject_config(pyproject)
 
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
     formatter = Formatter(

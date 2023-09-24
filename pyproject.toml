@@ -32,7 +32,7 @@ dependencies = [
 changelist = "changelist.__main__:main"
 
 [project.optional-dependencies]
-lint = ["pre-commit == 3.3.3"]
+lint = ["pre-commit == 3.4.0"]
 
 [tool.ruff]
 line-length = 88

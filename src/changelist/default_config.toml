@@ -2,7 +2,9 @@
 
 [tool.changelist]
 title_template = "{repo_name} {version}"
-intro_template = "We're happy to announce the release of {repo_name} {version}!"
+intro_template = """
+We're happy to announce the release of {repo_name} {version}!
+"""
 outro_template = """
 _These lists are automatically generated, and may not be complete or may contain
 duplicates._

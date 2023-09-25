@@ -1,3 +1,36 @@
+# changelist 0.3
+
+We're happy to announce the release of changelist 0.3!
+
+## Enhancements
+
+- Add newline before lists in contributor section ([#40](https://github.com/scientific-python/changelist/pull/40)).
+
+## Bug Fixes
+
+- Add newline after PR sections ([#35](https://github.com/scientific-python/changelist/pull/35)).
+
+## Maintenance
+
+- Update setuptools requirement ([#37](https://github.com/scientific-python/changelist/pull/37)).
+
+## Documentation
+
+- Link to example in README ([#36](https://github.com/scientific-python/changelist/pull/36)).
+- Fix CHANGELOG format ([#38](https://github.com/scientific-python/changelist/pull/38)).
+
+## Contributors
+
+1 authors added to this release (alphabetically):
+
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+
+1 reviewers added to this release (alphabetically):
+
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+
+_These lists are automatically generated, and may not be complete or may contain duplicates._
+
 # changelist 0.2
 
 We're happy to announce the release of changelist 0.2!

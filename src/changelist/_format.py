@@ -163,11 +163,13 @@ We're happy to announce the release of {repo_name} {version}!
         yield "\n"
 
         yield f"{len(authors)} authors added to this release (alphabetically):\n"
+        yield "\n"
         author_lines = map(self._format_user_line, authors)
         yield from sorted(author_lines, key=lambda s: s.lower())
         yield "\n"
 
         yield f"{len(reviewers)} reviewers added to this release (alphabetically):\n"
+        yield "\n"
         reviewers_lines = map(self._format_user_line, reviewers)
         yield from sorted(reviewers_lines, key=lambda s: s.lower())
         yield "\n"

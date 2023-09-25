@@ -137,6 +137,8 @@ We're happy to announce the release of {repo_name} {version}!
         """Format a section title and list its pull requests sorted by merge date."""
         if pull_requests:
             yield from self._format_section_title(title, level=2)
+            yield "\n"
+
             for pr in sorted(pull_requests, key=lambda pr: pr.merged_at):
                 yield from self._format_pull_request(pr)
             yield "\n"

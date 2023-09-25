@@ -1,6 +1,7 @@
 # changelist
 
-Prepare an automatic changelog from GitHub pull requests.
+Prepare an automatic changelog from GitHub pull requests. For example, see
+https://github.com/scientific-python/changelist/blob/main/CHANGELOG.md.
 
 _This project is currently in its alpha stage and might be incomplete or change a lot!_
 

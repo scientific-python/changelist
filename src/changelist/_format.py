@@ -110,10 +110,10 @@ class MdFormatter:
         return summary
 
     def _format_pull_request(self, pr: PullRequest) -> Iterable[str]:
-        summary = self._parse_pull_request_summary(pr).rstrip(".")
-        yield f"- {summary}\n"
         link = self._format_link(f"#{pr.number}", f"{pr.html_url}")
-        yield f"  ({link}).\n"
+        summary = self._parse_pull_request_summary(pr).rstrip(".")
+        summary = f"- {summary} ({link}).\n"
+        yield summary
 
     def _format_pr_section(
         self, title: str, pull_requests: set[PullRequest]
@@ -121,6 +121,8 @@ class MdFormatter:
         """Format a section title and list its pull requests sorted by merge date."""
         if pull_requests:
             yield from self._format_section_title(title, level=2)
+            yield "\n"
+
             for pr in sorted(pull_requests, key=lambda pr: pr.merged_at):
                 yield from self._format_pull_request(pr)
             yield "\n"
@@ -130,7 +132,7 @@ class MdFormatter:
         line = self._format_link(line, user.html_url)
         if user.name:
             line = f"{user.name} ({line})"
-        return line + ",\n"
+        return f"- {line}\n"
 
     def _format_contributor_section(
         self,
@@ -145,11 +147,13 @@ class MdFormatter:
         yield "\n"
 
         yield f"{len(authors)} authors added to this release (alphabetically):\n"
+        yield "\n"
         author_lines = map(self._format_user_line, authors)
         yield from sorted(author_lines, key=lambda s: s.lower())
         yield "\n"
 
         yield f"{len(reviewers)} reviewers added to this release (alphabetically):\n"
+        yield "\n"
         reviewers_lines = map(self._format_user_line, reviewers)
         yield from sorted(reviewers_lines, key=lambda s: s.lower())
         yield "\n"

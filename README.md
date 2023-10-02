@@ -1,6 +1,7 @@
 # changelist
 
-Prepare an automatic changelog from GitHub pull requests.
+Prepare an automatic changelog from GitHub pull requests. For example, see
+https://github.com/scientific-python/changelist/blob/main/CHANGELOG.md.
 
 _This project is currently in its alpha stage and might be incomplete or change a lot!_
 
@@ -81,7 +82,7 @@ jobs:
     name: attach to PR
     runs-on: ubuntu-latest
     steps:
-      - uses: scientific-python/attach-next-milestone-action@f94a5235518d4d34911c41e19d780b8e79d42238
+      - uses: scientific-python/attach-next-milestone-action@bc07be829f693829263e57d5e8489f4e57d3d420
         with:
           token: ${{ secrets.MILESTONE_LABELER_TOKEN }}
           force: true

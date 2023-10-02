@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=43.0.0", "wheel"]
+requires = ["setuptools>=68.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "changelist"
-version = "0.2rc1.dev0"
+version = "0.4rc0.dev0"
 requires-python = ">=3.9"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
@@ -32,7 +32,7 @@ dependencies = [
 changelist = "changelist.__main__:main"
 
 [project.optional-dependencies]
-lint = ["pre-commit == 3.3.3"]
+lint = ["pre-commit == 3.4.0"]
 
 [tool.ruff]
 line-length = 88

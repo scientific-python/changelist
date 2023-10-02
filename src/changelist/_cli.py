@@ -46,7 +46,7 @@ def parse_command_line(func: Callable) -> Callable:
     parser.add_argument(
         "org_repo",
         help="Org and repo name of a repository on GitHub (delimited by a slash), "
-        "e.g. 'numpy/numpy'",
+        "e.g. 'scientific-python/changelist'",
     )
     parser.add_argument(
         "start_rev",

@@ -1,7 +1,19 @@
 # changelist
 
-Prepare an automatic changelog from GitHub pull requests. For example, see
+Changelist helps you write better release notes by automating as much of the
+process as possible. For example, see
 https://github.com/scientific-python/changelist/blob/main/CHANGELOG.md.
+
+**Features**
+
+- Compile a list of pull requests, code authors and reviewers between any two
+  valid Git objects (refs).
+- Categorize pull requests into sections based on GitHub labels.
+- Point it at any repository on GitHub. No need to clone or checkout a
+  repository locally, a Python package is all that's needed.
+
+We recommend to treat the generated document as a first draft to build
+on and not as an already perfect documentation of the release.
 
 _This project is currently in its alpha stage and might be incomplete or change a lot!_
 

@@ -1,5 +1,4 @@
-# Default configuration as supported in pyproject.toml
-
+# Default changelist configuration as supported in pyproject.toml
 [tool.changelist]
 
 # A template string that is included as the title of the generated notes.
@@ -40,13 +39,12 @@ ignored_user_logins = [
 # group named "summary".
 pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*^```"
 
-[tool.changelist.label_section_map]
-
 # If any of a pull request's labels matches one of the regexes on the left side
 # its summary will appear in the appropriate section with the title given on
 # the right side. If a pull request doesn't match one of these categories it is
 # sorted into a section titled "Other". Pull request can appear in multiple
 # sections as long as their labels match.
+[tool.changelist.label_section_map]
 ".*Highlight.*" = "Highlights"
 ".*New feature.*" = "New Features"
 ".*API.*" = "API Changes"

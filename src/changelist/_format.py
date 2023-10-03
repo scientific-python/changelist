@@ -19,6 +19,7 @@ class MdFormatter:
     pull_requests: set[PullRequest]
     authors: set[Union[NamedUser]]
     reviewers: set[NamedUser]
+    runtime_dependencies: set[str]
 
     version: str
     title_template: str
@@ -52,6 +53,8 @@ class MdFormatter:
         yield from self._format_intro()
         for title, pull_requests in self._prs_by_section.items():
             yield from self._format_pr_section(title, pull_requests)
+        if self.runtime_dependencies:
+            yield from self._format_dependencies_section(self.runtime_dependencies)
         yield from self._format_contributor_section(self.authors, self.reviewers)
         yield from self._format_outro()
 
@@ -156,6 +159,17 @@ class MdFormatter:
         yield "\n"
         reviewers_lines = map(self._format_user_line, reviewers)
         yield from sorted(reviewers_lines, key=lambda s: s.lower())
+        yield "\n"
+
+    def _format_dependencies_section(self, runtime_dependencies: set[str]):
+        yield from self._format_section_title("Dependencies", level=2)
+        yield "\n"
+        yield "Minimal runtime dependencies:\n"
+        yield "\n"
+        for dependency in sorted(runtime_dependencies):
+            line = f"`{dependency}`"
+            line = self._sanitize_text(line)
+            yield f"- {line}\n"
         yield "\n"
 
     def _format_intro(self):

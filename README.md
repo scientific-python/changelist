@@ -50,6 +50,8 @@ changelist can be configured from two sources, in order of precedence:
 If a configuration option is not specified in either file above, changelist
 falls back to the following configuration:
 
+<!--- begin default_config.toml --->
+
 ````toml
 # Default changelist configuration as supported in pyproject.toml
 [tool.changelist]
@@ -108,6 +110,8 @@ pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*
 ".*Infrastructure.*" = "Infrastructure"
 ".*Maintenance.*" = "Maintenance"
 ````
+
+<!--- end default_config.toml --->
 
 ## Set up your repository
 

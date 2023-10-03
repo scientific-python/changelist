@@ -1,3 +1,31 @@
+# changelist 0.4
+
+We're happy to announce the release of changelist 0.4!
+
+## Enhancements
+
+- Add support for configuration files either via a remote `pyproject.toml` or a local TOML file given with the new option `--config`. This file allows the configuration of templates, ways that changelist matches labels, finds summaries, as well as logins to ignore in the contributor section ([#30](https://github.com/scientific-python/changelist/pull/30)).
+
+## Documentation
+
+- Add docstrings to `_config.py` submodule ([#44](https://github.com/scientific-python/changelist/pull/44)).
+
+## Contributors
+
+2 authors added to this release (alphabetically):
+
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Lars Grüter ([@lagru](https://github.com/lagru))
+
+4 reviewers added to this release (alphabetically):
+
+- Brigitta Sipőcz ([@bsipocz](https://github.com/bsipocz))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Lars Grüter ([@lagru](https://github.com/lagru))
+- Stefan van der Walt ([@stefanv](https://github.com/stefanv))
+
+_These lists are automatically generated, and may not be complete or may contain duplicates._
+
 # changelist 0.3
 
 We're happy to announce the release of changelist 0.3!

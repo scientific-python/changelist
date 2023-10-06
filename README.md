@@ -127,6 +127,9 @@ we recommend adding an action that fails CI if the label is missing.
 
 To do so, place the following in `.github/workflows/label-check.yaml`:
 
+<!--- Changes to the following block are overridden by a pre-commit hook! --->
+<!--- begin label-check.yaml --->
+
 ```yaml
 name: Labels
 
@@ -151,6 +154,8 @@ jobs:
         run: exit 1
 ```
 
+<!--- end label-check.yaml --->
+
 ### Milestones
 
 Often, it is helpful to have milestones that reflect the actual PRs
@@ -158,6 +163,9 @@ merged. We therefore recommend adding an action that attached the
 next open milestone to any merged PR.
 
 To do so, place the following in `.github/workflows/milestone-merged-prs.yaml`:
+
+<!--- Changes to the following block are overridden by a pre-commit hook! --->
+<!--- begin milestone-merged-prs.yaml --->
 
 ```yaml
 name: Milestone
@@ -179,5 +187,7 @@ jobs:
           token: ${{ secrets.MILESTONE_LABELER_TOKEN }}
           force: true
 ```
+
+<!--- end milestone-merged-prs.yaml --->
 
 See https://github.com/scientific-python/attach-next-milestone-action for more information.

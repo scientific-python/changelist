@@ -32,6 +32,16 @@ def main():
     section = section.replace(r"\\", r"\\\\")
     readme = rx.sub(section, readme)
 
+    # default_config.toml
+    begin, end, section = get_section_info(".github/workflows/label-check.yaml")
+    rx = re.compile(begin + ".*?" + end, re.DOTALL)
+    readme = rx.sub(section, readme)
+
+    # default_config.toml
+    begin, end, section = get_section_info(".github/workflows/milestone-merged-prs.yaml")
+    rx = re.compile(begin + ".*?" + end, re.DOTALL)
+    readme = rx.sub(section, readme)
+
     with open(PROJECT_ROOT / "README.md", "w") as fh:
         fh.write(readme)
 

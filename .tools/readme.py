@@ -1,13 +1,16 @@
 """Update README.md, used by pre-commit."""
 
 import re
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parent.parent
 
 
 def main():
-    with open("README.md") as fh:
+    with open(PROJECT_ROOT / "README.md") as fh:
         readme = fh.read()
 
-    with open("src/changelist/default_config.toml") as fh:
+    with open(PROJECT_ROOT / "src/changelist/default_config.toml") as fh:
         default_config = fh.read()
 
     config_begin = r"<!--- begin default_config.toml --->\n"
@@ -21,7 +24,7 @@ def main():
     config_section = config_section.replace(r"\\", r"\\\\")
     readme = rx.sub(config_section, readme)
 
-    with open("README.md", "w") as fh:
+    with open(PROJECT_ROOT / "README.md", "w") as fh:
         fh.write(readme)
 
 

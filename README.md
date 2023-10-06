@@ -130,14 +130,14 @@ To do so, place the following in `.github/workflows/label-check.yaml`:
 <!--- Changes to the following block are overridden by a pre-commit hook! --->
 <!--- begin label-check.yaml --->
 
-```yaml
+````yaml
 name: Labels
 
 on:
   pull_request:
     types:
       - opened
-      - repoened
+      - reopened
       - labeled
       - unlabeled
       - synchronize
@@ -152,7 +152,7 @@ jobs:
     steps:
       - if: "contains( env.LABELS, 'type: ' ) == false"
         run: exit 1
-```
+````
 
 <!--- end label-check.yaml --->
 
@@ -167,7 +167,7 @@ To do so, place the following in `.github/workflows/milestone-merged-prs.yaml`:
 <!--- Changes to the following block are overridden by a pre-commit hook! --->
 <!--- begin milestone-merged-prs.yaml --->
 
-```yaml
+````yaml
 name: Milestone
 
 on:
@@ -186,7 +186,7 @@ jobs:
         with:
           token: ${{ secrets.MILESTONE_LABELER_TOKEN }}
           force: true
-```
+````
 
 <!--- end milestone-merged-prs.yaml --->
 

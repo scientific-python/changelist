@@ -50,6 +50,7 @@ changelist can be configured from two sources, in order of precedence:
 If a configuration option is not specified in either file above, changelist
 falls back to the following configuration:
 
+<!--- Changes to the following block are overridden by a pre-commit hook! --->
 <!--- begin default_config.toml --->
 
 ````toml

@@ -6,23 +6,31 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent
 
 
+def get_section_info(file):
+    p = Path(file)
+    name = p.parts[-1]
+    ext = p.suffix[1:]
+    begin = rf"<!--- begin {name} --->\n"
+    end = rf"<!--- end {name} --->\n"
+
+    with open(PROJECT_ROOT / file) as fh:
+        section = fh.read()
+        
+    section = (
+        begin + rf"\n````{ext}\n" + section + r"````\n\n" + end
+    )
+    return begin, end, section
+
 def main():
     with open(PROJECT_ROOT / "README.md") as fh:
         readme = fh.read()
 
-    with open(PROJECT_ROOT / "src/changelist/default_config.toml") as fh:
-        default_config = fh.read()
-
-    config_begin = r"<!--- begin default_config.toml --->\n"
-    config_end = r"<!--- end default_config.toml --->\n"
-    config_section = (
-        config_begin + r"\n````toml\n" + default_config + r"````\n\n" + config_end
-    )
-
-    rx = re.compile(config_begin + ".*?" + config_end, re.DOTALL)
+    # default_config.toml
+    begin, end, section = get_section_info("src/changelist/default_config.toml")
+    rx = re.compile(begin + ".*?" + end, re.DOTALL)
     # Regex substitution replaces r"\\" with to r"\", compensate
-    config_section = config_section.replace(r"\\", r"\\\\")
-    readme = rx.sub(config_section, readme)
+    section = section.replace(r"\\", r"\\\\")
+    readme = rx.sub(section, readme)
 
     with open(PROJECT_ROOT / "README.md", "w") as fh:
         fh.write(readme)

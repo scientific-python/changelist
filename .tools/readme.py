@@ -15,11 +15,14 @@ def get_section_info(file):
 
     with open(PROJECT_ROOT / file) as fh:
         section = fh.read()
-        
-    section = (
-        begin + rf"\n````{ext}\n" + section + r"````\n\n" + end
-    )
+
+    if ext == "toml":
+        section = begin + rf"\n````{ext}\n" + section + r"````\n\n" + end
+    else:
+        section = begin + rf"\n```{ext}\n" + section + r"```\n\n" + end
+
     return begin, end, section
+
 
 def main():
     with open(PROJECT_ROOT / "README.md") as fh:
@@ -38,7 +41,9 @@ def main():
     readme = rx.sub(section, readme)
 
     # default_config.toml
-    begin, end, section = get_section_info(".github/workflows/milestone-merged-prs.yaml")
+    begin, end, section = get_section_info(
+        ".github/workflows/milestone-merged-prs.yaml"
+    )
     rx = re.compile(begin + ".*?" + end, re.DOTALL)
     readme = rx.sub(section, readme)
 

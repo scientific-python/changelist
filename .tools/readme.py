@@ -1,3 +1,5 @@
+"""Update README.md, used by pre-commit."""
+
 import re
 
 

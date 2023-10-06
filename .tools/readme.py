@@ -17,6 +17,8 @@ def main():
     )
 
     rx = re.compile(config_begin + ".*?" + config_end, re.DOTALL)
+    # Regex substitution replaces r"\\" with to r"\", compensate
+    config_section = config_section.replace(r"\\", r"\\\\")
     readme = rx.sub(config_section, readme)
 
     with open("README.md", "w") as fh:

@@ -47,4 +47,4 @@ repos:
         name: readme.py
         language: system
         entry: python .tools/readme.py
-        files: "README.md|src/changelist/default_config.toml|.tools/readme.py"
+        files: "README.md|src/changelist/default_config.toml|.github/workflows/label-check.yaml|.github/workflows/milestone-merged-prs.yaml|.tools/readme.py"

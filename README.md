@@ -50,6 +50,9 @@ changelist can be configured from two sources, in order of precedence:
 If a configuration option is not specified in either file above, changelist
 falls back to the following configuration:
 
+<!--- Changes to the following block are overridden by a pre-commit hook! --->
+<!--- begin default_config.toml --->
+
 ````toml
 # Default changelist configuration as supported in pyproject.toml
 [tool.changelist]
@@ -109,6 +112,8 @@ pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*
 ".*Maintenance.*" = "Maintenance"
 ````
 
+<!--- end default_config.toml --->
+
 ## Set up your repository
 
 To categorize merged PRs in the changelist with the default configuration, each
@@ -122,6 +127,9 @@ we recommend adding an action that fails CI if the label is missing.
 
 To do so, place the following in `.github/workflows/label-check.yaml`:
 
+<!--- Changes to the following block are overridden by a pre-commit hook! --->
+<!--- begin label-check.yaml --->
+
 ```yaml
 name: Labels
 
@@ -129,7 +137,7 @@ on:
   pull_request:
     types:
       - opened
-      - repoened
+      - reopened
       - labeled
       - unlabeled
       - synchronize
@@ -146,6 +154,8 @@ jobs:
         run: exit 1
 ```
 
+<!--- end label-check.yaml --->
+
 ### Milestones
 
 Often, it is helpful to have milestones that reflect the actual PRs
@@ -153,6 +163,9 @@ merged. We therefore recommend adding an action that attached the
 next open milestone to any merged PR.
 
 To do so, place the following in `.github/workflows/milestone-merged-prs.yaml`:
+
+<!--- Changes to the following block are overridden by a pre-commit hook! --->
+<!--- begin milestone-merged-prs.yaml --->
 
 ```yaml
 name: Milestone
@@ -174,5 +187,7 @@ jobs:
           token: ${{ secrets.MILESTONE_LABELER_TOKEN }}
           force: true
 ```
+
+<!--- end milestone-merged-prs.yaml --->
 
 See https://github.com/scientific-python/attach-next-milestone-action for more information.

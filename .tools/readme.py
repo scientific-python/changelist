@@ -35,12 +35,12 @@ def main():
     section = section.replace(r"\\", r"\\\\")
     readme = rx.sub(section, readme)
 
-    # default_config.toml
+    # label-check.yaml
     begin, end, section = get_section_info(".github/workflows/label-check.yaml")
     rx = re.compile(begin + ".*?" + end, re.DOTALL)
     readme = rx.sub(section, readme)
 
-    # default_config.toml
+    # milestone-merged-prs.yaml
     begin, end, section = get_section_info(
         ".github/workflows/milestone-merged-prs.yaml"
     )

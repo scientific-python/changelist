@@ -49,6 +49,7 @@ class MdFormatter:
             repo_name=self.repo_name, version=self.version
         )
         yield from self._format_section_title(title, level=1)
+        yield "\n"
         yield from self._format_intro()
         for title, pull_requests in self._prs_by_section.items():
             yield from self._format_pr_section(title, pull_requests)

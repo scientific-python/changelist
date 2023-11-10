@@ -11,6 +11,7 @@ https://github.com/scientific-python/changelist/blob/main/CHANGELOG.md.
 - Categorize pull requests into sections based on GitHub labels.
 - Point it at any repository on GitHub. No need to clone or checkout a
   repository locally, a Python package is all that's needed.
+- List latest runtime dependencies of your release.
 
 We recommend to treat the generated document as a first draft to build
 on and not as an already perfect documentation of the release.

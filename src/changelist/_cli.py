@@ -11,9 +11,9 @@ import requests_cache
 from github import Github
 from tqdm import tqdm
 
+from . import _query
 from ._config import add_config_defaults, local_config, remote_config
 from ._format import MdFormatter, RstFormatter
-from ._query import commits_between, contributors, pull_requests_from_commits
 
 logger = logging.getLogger(__name__)
 
@@ -141,15 +141,18 @@ def main(
     config = add_config_defaults(config)
 
     print("Fetching commits...", file=sys.stderr)
-    commits = commits_between(gh, org_repo, start_rev, stop_rev)
-    pull_requests = pull_requests_from_commits(
+    commits = _query.commits_between(gh, org_repo, start_rev, stop_rev)
+    pull_requests = _query.pull_requests_from_commits(
         lazy_tqdm(commits, desc="Fetching pull requests")
     )
-    authors, reviewers = contributors(
+    authors, reviewers = _query.contributors(
         gh=gh,
         org_repo=org_repo,
         commits=lazy_tqdm(commits, desc="Fetching authors"),
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
+    )
+    runtime_dependencies = _query.pyproject_dependencies(
+        gh=gh, org_repo=org_repo, rev=stop_rev
     )
 
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
@@ -158,6 +161,7 @@ def main(
         pull_requests=pull_requests,
         authors=authors,
         reviewers=reviewers,
+        runtime_dependencies=runtime_dependencies,
         version=version,
         title_template=config["title_template"],
         intro_template=config["intro_template"],

@@ -152,6 +152,7 @@ def main(
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
 
+    print("Formatting notes...", file=sys.stderr)
     change_notes = ChangeNote.from_pull_requests(
         pull_requests,
         pr_summary_regex=re.compile(config["pr_summary_regex"], flags=re.MULTILINE),
@@ -178,7 +179,5 @@ def main(
             io.writelines(formatter.iter_lines())
     else:
         print()
-        for line in formatter.iter_lines():
-            assert line.endswith("\n")
-            assert line.count("\n") == 1
-            print(line, end="", file=sys.stdout)
+        notes = str(formatter)
+        print(notes, file=sys.stdout)

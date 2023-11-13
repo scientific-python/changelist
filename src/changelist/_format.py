@@ -65,14 +65,47 @@ class ChangeNote:
         return notes
 
 
+@dataclass(frozen=True, slots=True, kw_only=True)
+class Contributor:
+    """A person mentioned in the notes as an author or reviewer.
+
+    `login` should be the GitHub  handle without "@". The "@" is added by the
+    `reference_name` property. `reference_url` is typically a URL to the
+     contributor's GitHub profile.
+    """
+
+    name: str | None
+    login: str
+    reference_url: str
+
+    @property
+    def reference_name(self) -> str:
+        """The GitHub login handle with prefixed "@"."""
+        return f"@{self.login}"
+
+    @classmethod
+    def from_named_users(cls, named_users: set[NamedUser]) -> "set[Contributor]":
+        """ """
+        contributors = set()
+        for user in named_users:
+            contributors.add(
+                cls(
+                    name=user.name,
+                    login=user.login,
+                    reference_url=user.html_url,
+                )
+            )
+        return contributors
+
+
 @dataclass(frozen=True, kw_only=True)
 class MdFormatter:
     """Format release notes in Markdown from PRs, authors and reviewers."""
 
     repo_name: str
     change_notes: set[ChangeNote]
-    authors: set[NamedUser]
-    reviewers: set[NamedUser]
+    authors: set[Contributor]
+    reviewers: set[Contributor]
 
     version: str
     title_template: str
@@ -171,34 +204,34 @@ class MdFormatter:
                 yield from self._format_change_note(item)
             yield "\n"
 
-    def _format_user_line(self, user: NamedUser) -> str:
-        line = f"@{user.login}"
-        line = self._format_link(line, user.html_url)
-        if user.name:
-            line = f"{user.name} ({line})"
+    def _format_contributor_line(self, contributor: Contributor) -> str:
+        line = contributor.reference_name
+        line = self._format_link(line, contributor.reference_url)
+        if contributor.name:
+            line = f"{contributor.name} ({line})"
         return f"- {line}\n"
 
     def _format_contributor_section(
         self,
-        authors: set[NamedUser],
-        reviewers: set[NamedUser],
+        authors: set[Contributor],
+        reviewers: set[Contributor],
     ) -> Iterable[str]:
         """Format contributor section and list users sorted by login handle."""
-        authors = {u for u in authors if u.login not in self.ignored_user_logins}
-        reviewers = {u for u in reviewers if u.login not in self.ignored_user_logins}
+        authors = {c for c in authors if c.login not in self.ignored_user_logins}
+        reviewers = {c for c in reviewers if c.login not in self.ignored_user_logins}
 
         yield from self._format_section_title("Contributors", level=2)
         yield "\n"
 
         yield f"{len(authors)} authors added to this release (alphabetically):\n"
         yield "\n"
-        author_lines = map(self._format_user_line, authors)
+        author_lines = map(self._format_contributor_line, authors)
         yield from sorted(author_lines, key=lambda s: s.lower())
         yield "\n"
 
         yield f"{len(reviewers)} reviewers added to this release (alphabetically):\n"
         yield "\n"
-        reviewers_lines = map(self._format_user_line, reviewers)
+        reviewers_lines = map(self._format_contributor_line, reviewers)
         yield from sorted(reviewers_lines, key=lambda s: s.lower())
         yield "\n"
 

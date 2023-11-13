@@ -12,7 +12,7 @@ from github import Github
 from tqdm import tqdm
 
 from ._config import add_config_defaults, local_config, remote_config
-from ._format import ChangeNote, MdFormatter, RstFormatter
+from ._format import ChangeNote, Contributor, MdFormatter, RstFormatter
 from ._query import commits_between, contributors, pull_requests_from_commits
 
 logger = logging.getLogger(__name__)
@@ -161,8 +161,8 @@ def main(
     formatter = Formatter(
         repo_name=org_repo.split("/")[-1],
         change_notes=change_notes,
-        authors=authors,
-        reviewers=reviewers,
+        authors=Contributor.from_named_users(authors),
+        reviewers=Contributor.from_named_users(reviewers),
         version=version,
         title_template=config["title_template"],
         intro_template=config["intro_template"],

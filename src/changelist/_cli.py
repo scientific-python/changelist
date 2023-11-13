@@ -12,7 +12,7 @@ from github import Github
 from tqdm import tqdm
 
 from ._config import add_config_defaults, local_config, remote_config
-from ._format import MdFormatter, RstFormatter
+from ._format import ChangeNote, MdFormatter, RstFormatter
 from ._query import commits_between, contributors, pull_requests_from_commits
 
 logger = logging.getLogger(__name__)
@@ -152,10 +152,15 @@ def main(
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
 
+    change_notes = ChangeNote.from_pull_requests(
+        pull_requests,
+        pr_summary_regex=re.compile(config["pr_summary_regex"], flags=re.MULTILINE),
+    )
+
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
     formatter = Formatter(
         repo_name=org_repo.split("/")[-1],
-        pull_requests=pull_requests,
+        change_notes=change_notes,
         authors=authors,
         reviewers=reviewers,
         version=version,
@@ -163,7 +168,6 @@ def main(
         intro_template=config["intro_template"],
         outro_template=config["outro_template"],
         label_section_map=config["label_section_map"],
-        pr_summary_regex=re.compile(config["pr_summary_regex"], flags=re.MULTILINE),
         ignored_user_logins=config["ignored_user_logins"],
     )
 

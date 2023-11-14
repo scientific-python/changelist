@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "changelist"
 version = "0.5rc0.dev0"
+# TODO add slots=True, kw_only=True to dataclasses starting with >=3.10
 requires-python = ">=3.9"
 readme = "README.md"
 license = {file = "LICENSE.txt"}

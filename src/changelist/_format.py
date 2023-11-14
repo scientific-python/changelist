@@ -11,7 +11,7 @@ from github.PullRequest import PullRequest
 logger = logging.getLogger(__name__)
 
 
-@dataclass(frozen=True, slots=True, kw_only=True)
+@dataclass(frozen=True)
 class ChangeNote:
     """Describes an atomic change in the notes."""
 
@@ -65,7 +65,7 @@ class ChangeNote:
         return notes
 
 
-@dataclass(frozen=True, slots=True, kw_only=True)
+@dataclass(frozen=True)
 class Contributor:
     """A person mentioned in the notes as an author or reviewer.
 
@@ -74,7 +74,7 @@ class Contributor:
      contributor's GitHub profile.
     """
 
-    name: str | None
+    name: str
     login: str
     reference_url: str
 
@@ -98,7 +98,7 @@ class Contributor:
         return contributors
 
 
-@dataclass(frozen=True, kw_only=True)
+@dataclass(frozen=True)
 class MdFormatter:
     """Format release notes in Markdown from PRs, authors and reviewers."""
 

@@ -69,7 +69,7 @@ class ChangeNote:
 class Contributor:
     """A person mentioned in the notes as an author or reviewer.
 
-    `login` should be the GitHub  handle without "@". The "@" is added by the
+    `login` should be the GitHub handle without "@". The "@" is added by the
     `reference_name` property. `reference_url` is typically a URL to the
      contributor's GitHub profile.
     """

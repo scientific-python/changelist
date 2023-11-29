@@ -51,7 +51,7 @@ def pull_requests_from_commits(commits: Iterable[Commit]) -> set[PullRequest]:
     return all_pull_requests
 
 
-@dataclass(frozen=True, kw_only=True)
+@dataclass(frozen=True)
 class GitHubGraphQl:
     """Interface to query GitHub's GraphQL API for a particular repository."""
 

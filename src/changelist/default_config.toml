@@ -27,17 +27,21 @@ ignored_user_logins = [
 ]
 
 # If this regex matches a pull requests description, the captured content
-# is included instead of the pull request title.
+# is included instead of the pull request title. The regex is allowed to match
+# more than once in which case a single pull request may result in multiple
+# items. Each summary can optionally be prefixed with a `Label:` which takes
+# precedence over the pull requests labels. This is useful if one pull request
+# should be summarized in different sections.
 # E.g. the default regex below is matched by
 #
 # ```release-note
-# An ideally expressive description of the change that is included as a single
-# bullet point. Newlines are removed.
+# Label: An ideally expressive description of the change that is included as
+# a single bullet point. Newlines are removed.
 # ```
 #
 # If you modify this regex, make sure to match the content with a capture
 # group named "summary".
-pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*^```"
+pr_summary_regex = "^```release-note\\s*((?P<label>[^:]*):)?(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*^```"
 
 # If any of a pull request's labels matches one of the regexes on the left side
 # its summary will appear in the appropriate section with the title given on

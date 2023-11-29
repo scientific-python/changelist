@@ -33,7 +33,7 @@ class ChangeNote:
         Create one or more notes describing an atomic change from each given
         pull request.
 
-        `pr_summary_regex` is used to detect one or multiple  notes in a pull
+        `pr_summary_regex` is used to detect one or multiple notes in a pull
         request description that will be used instead of the pull request title
         if present. This uncouples pull requests and notes somewhat. While
         ideally, a pull request introduces a change that would be described in

@@ -1,9 +1,12 @@
 from datetime import datetime
 from pathlib import Path
 
+from changelist._config import DEFAULT_CONFIG_PATH, local_config
 from changelist._format import ChangeNote, Contributor, MdFormatter, RstFormatter
 
 here = Path(__file__).parent
+
+DEFAULT_CONFIG = local_config(DEFAULT_CONFIG_PATH)
 
 NOTES = (
     ChangeNote(
@@ -48,18 +51,11 @@ CONTRIBUTORS = (
         reference_url="https://github.com/madhu-esen",
     ),
     Contributor(
-        name="bot",
-        login="bot",
+        name=None,
+        login="web-flow",
         reference_url="https://github.com/apps/bot",
     ),
 )
-
-LABEL_SECTION_MAP = {
-    ".*New feature.*": "New Features",
-    ".*API.*": "API Changes",
-    ".*Bug fix.*": "Bug Fixes",
-    ".*Documentation.*": "Documentation",
-}
 
 DEFAULT_FORMATTER_KWARGS = {
     "repo_name": "foolib",
@@ -67,11 +63,11 @@ DEFAULT_FORMATTER_KWARGS = {
     "authors": set(CONTRIBUTORS),
     "reviewers": set(CONTRIBUTORS),
     "version": "1.0",
-    "title_template": "{repo_name} {version}",
+    "title_template": DEFAULT_CONFIG["title_template"],
     "intro_template": "Intro with `literal` for {repo_name} {version}!\n",
     "outro_template": "Outro with `literal`.",
-    "label_section_map": LABEL_SECTION_MAP,
-    "ignored_user_logins": ("bot"),
+    "label_section_map": DEFAULT_CONFIG["label_section_map"],
+    "ignored_user_logins": DEFAULT_CONFIG["ignored_user_logins"],
 }
 
 

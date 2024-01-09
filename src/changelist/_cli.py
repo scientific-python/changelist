@@ -1,7 +1,6 @@
 import argparse
 import logging
 import os
-import re
 import sys
 import tempfile
 from pathlib import Path
@@ -12,7 +11,8 @@ from github import Github
 from tqdm import tqdm
 
 from ._config import add_config_defaults, local_config, remote_config
-from ._format import ChangeNote, Contributor, MdFormatter, RstFormatter
+from ._format import MdFormatter, RstFormatter
+from ._objects import ChangeNote, Contributor
 from ._query import commits_between, contributors, pull_requests_from_commits
 
 logger = logging.getLogger(__name__)
@@ -155,7 +155,8 @@ def main(
     print("Formatting notes...", file=sys.stderr)
     change_notes = ChangeNote.from_pull_requests(
         pull_requests,
-        pr_summary_regex=re.compile(config["pr_summary_regex"], flags=re.MULTILINE),
+        pr_summary_regex=config["pr_summary_regex"],
+        pr_summary_label_regex=config["pr_summary_label_regex"],
     )
 
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]

@@ -3,99 +3,10 @@ import re
 from collections import OrderedDict
 from collections.abc import Iterable
 from dataclasses import dataclass
-from datetime import datetime
 
-from github.NamedUser import NamedUser
-from github.PullRequest import PullRequest
+from changelist._objects import ChangeNote, Contributor
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass(frozen=True)
-class ChangeNote:
-    """Describes an atomic change in the notes."""
-
-    content: str
-    reference_name: str
-    reference_url: str
-    labels: tuple[str, ...]
-    timestamp: datetime
-
-    @classmethod
-    def from_pull_requests(
-        cls,
-        pull_requests: set[PullRequest],
-        *,
-        pr_summary_regex: re.Pattern,
-    ) -> "set[ChangeNote]":
-        """Create a set of notes from pull requests.
-
-        Create one or more notes describing an atomic change from each given
-        pull request.
-
-        `pr_summary_regex` is used to detect one or multiple notes in a pull
-        request description that will be used instead of the pull request title
-        if present. This uncouples pull requests and notes somewhat. While
-        ideally, a pull request introduces a change that would be described in
-        a single note, this is often not the case.
-        """
-        notes = set()
-        for pr in pull_requests:
-            if not pr.body or not (
-                matches := tuple(pr_summary_regex.finditer(pr.body))
-            ):
-                logger.debug("falling back to title for %s", pr.html_url)
-                matches = ({"summary": pr.title, "label": None},)
-            assert len(matches) >= 1
-            for match in matches:
-                summary = match["summary"]
-                if match["label"] is not None:
-                    labels = (match["label"],)
-                else:
-                    labels = tuple(label.name for label in pr.labels)
-                notes.add(
-                    cls(
-                        content=summary.strip(),
-                        reference_name=f"#{pr.number}",
-                        reference_url=pr.html_url,
-                        labels=labels,
-                        timestamp=pr.merged_at,
-                    )
-                )
-        return notes
-
-
-@dataclass(frozen=True)
-class Contributor:
-    """A person mentioned in the notes as an author or reviewer.
-
-    `login` should be the GitHub handle without "@". The "@" is added by the
-    `reference_name` property. `reference_url` is typically a URL to the
-     contributor's GitHub profile.
-    """
-
-    name: str
-    login: str
-    reference_url: str
-
-    @property
-    def reference_name(self) -> str:
-        """The GitHub login handle with prefixed "@"."""
-        return f"@{self.login}"
-
-    @classmethod
-    def from_named_users(cls, named_users: set[NamedUser]) -> "set[Contributor]":
-        """ """
-        contributors = set()
-        for user in named_users:
-            contributors.add(
-                cls(
-                    name=user.name,
-                    login=user.login,
-                    reference_url=user.html_url,
-                )
-            )
-        return contributors
 
 
 @dataclass(frozen=True)

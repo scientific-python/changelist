@@ -2,6 +2,7 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Union
 
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
@@ -96,7 +97,7 @@ class Contributor:
      contributor's GitHub profile.
     """
 
-    name: str | None
+    name: Union[str, None]
     login: str
     reference_url: str
 

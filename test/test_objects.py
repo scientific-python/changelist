@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
+from typing import Union
 
 from changelist._config import DEFAULT_CONFIG_PATH, local_config
 from changelist._objects import ChangeNote
@@ -19,7 +20,7 @@ class _MockLabel:
 @dataclass
 class _MockPullRequest:
     title: str
-    body: str | None
+    body: Union[str, None]
     labels: list[_MockLabel]
     number: int = (42,)
     html_url: str = "https://github.com/scientific-python/changelist/pull/53"

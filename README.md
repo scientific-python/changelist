@@ -100,8 +100,9 @@ pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*
 # Sometimes pull requests introduce changes that should be listed in different
 # sections. For that reason, `pr_summary_regex` can match more than once and
 # this regex, `pr_summary_label_regex`, can be used to add independent labels
-# to each summary. E.g. the example below will both match and go into separate
-# sections
+# to each summary. These labels are sorted with the `label_section_map` the
+# same way as regular pull request labels are. E.g. the example below will both
+# match and go into separate sections:
 #
 # ```release-note {label="Bug fix"}
 # Make `is_odd()` work for negative numbers.

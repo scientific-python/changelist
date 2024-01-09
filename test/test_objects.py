@@ -28,7 +28,7 @@ class _MockPullRequest:
 
 
 class Test_ChangeNote:
-    def test_from_pull_requests(self, caplog):
+    def test_from_pull_requests_multiple(self, caplog):
         caplog.set_level("DEBUG")
         body = """
 Some ignored text in the pull request body.
@@ -68,3 +68,24 @@ Make `is_odd()` work for negative numbers.
         assert len(caplog.records) == 1
         assert caplog.records[0].levelname == "DEBUG"
         assert "falling back to PR labels for summary" in caplog.records[0].msg
+
+    def test_from_pull_requests_fallback_title(self, caplog):
+        caplog.set_level("DEBUG")
+        pull_request = _MockPullRequest(
+            title='The title {label="ignored in title"}',
+            body="Nothing here.",
+            labels=[_MockLabel("Documentation")],
+        )
+        notes = ChangeNote.from_pull_requests(
+            [pull_request],
+            pr_summary_regex=DEFAULT_CONFIG["pr_summary_regex"],
+            pr_summary_label_regex=DEFAULT_CONFIG["pr_summary_label_regex"],
+        )
+        assert len(notes) == 1
+        notes = sorted(notes, key=lambda n: n.content)
+        assert notes[0].content == 'The title {label="ignored in title"}'
+        assert notes[0].labels == ("Documentation",)
+
+        assert len(caplog.records) == 1
+        assert caplog.records[0].levelname == "DEBUG"
+        assert "falling back to title" in caplog.records[0].msg

@@ -51,15 +51,14 @@ class ChangeNote:
                 matches := tuple(pr_summary_regex.finditer(pr.body))
             ):
                 logger.debug("falling back to title for %s", pr.html_url)
-                notes.add(
-                    cls(
-                        content=pr.title.strip(),
-                        reference_name=f"#{pr.number}",
-                        reference_url=pr.html_url,
-                        labels=pr_labels,
-                        timestamp=pr.merged_at,
-                    )
+                note = cls(
+                    content=pr.title.strip(),
+                    reference_name=f"#{pr.number}",
+                    reference_url=pr.html_url,
+                    labels=pr_labels,
+                    timestamp=pr.merged_at,
                 )
+                notes.add(note)
                 continue
 
             assert len(matches) >= 1
@@ -70,21 +69,23 @@ class ChangeNote:
                     labels = tuple(
                         label.strip() for label in label_match["label"].split(",")
                     )
+                    # Remove label block
                     summary = pr_summary_label_regex.sub("", summary)
                 else:
                     logger.debug(
-                        "falling back to PR labels for summary in %s", pr.html_url
+                        "falling back to PR labels for summary '%r' in %s",
+                        summary,
+                        pr.html_url,
                     )
                     labels = pr_labels
-                notes.add(
-                    cls(
-                        content=summary.strip(),
-                        reference_name=f"#{pr.number}",
-                        reference_url=pr.html_url,
-                        labels=labels,
-                        timestamp=pr.merged_at,
-                    )
+                note = cls(
+                    content=summary.strip(),
+                    reference_name=f"#{pr.number}",
+                    reference_url=pr.html_url,
+                    labels=labels,
+                    timestamp=pr.merged_at,
                 )
+                notes.add(note)
         return notes
 
 

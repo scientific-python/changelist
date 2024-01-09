@@ -14,11 +14,15 @@ DEFAULT_CONFIG = local_config(DEFAULT_CONFIG_PATH)
 
 @dataclass
 class _MockLabel:
+    """Mocks github.Label.Label partially."""
+
     name: str
 
 
 @dataclass
 class _MockPullRequest:
+    """Mocks github.PullRequest.PullRequest partially."""
+
     title: str
     body: Union[str, None]
     labels: list[_MockLabel]

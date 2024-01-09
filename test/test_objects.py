@@ -40,7 +40,7 @@ Deprecate `ìs_odd`; use `not (x % 2)` instead! {label="API, Highlight"}
 Document how to test for oddness of a number.
 ```
 
-```release-note {label="Bug fix"}
+```release-note {.someClass label="Bug fix" otherAttribute="test"}
 Make `is_odd()` work for negative numbers.
 ```
 """

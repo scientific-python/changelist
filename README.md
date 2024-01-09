@@ -110,7 +110,7 @@ pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*
 #
 # If you modify this regex, make sure to match the content with a capture
 # group named "label".
-pr_summary_label_regex = """{label=[\\"'](?P<label>[^}]+)[\\"']}"""
+pr_summary_label_regex = """{[^}]*?label=[\\"](?P<label>[^\\"]+)[^}]*?}"""
 
 # If any of a pull request's labels matches one of the regexes on the left side
 # its summary will appear in the appropriate section with the title given on

@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "changelist"
 version = "0.5rc0.dev0"
+# TODO add slots=True, kw_only=True to dataclasses starting with >=3.10
 requires-python = ">=3.9"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
@@ -33,6 +34,7 @@ changelist = "changelist.__main__:main"
 
 [project.optional-dependencies]
 lint = ["pre-commit == 3.6.0"]
+test = ["pytest", "pytest-cov"]
 
 [tool.ruff]
 line-length = 88
@@ -46,3 +48,8 @@ select = [
     "I",
     "UP",
 ]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "--doctest-modules"
+testpaths = ["src", "test"]

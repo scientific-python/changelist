@@ -1,7 +1,6 @@
 import argparse
 import logging
 import os
-import re
 import sys
 import tempfile
 from pathlib import Path
@@ -13,6 +12,7 @@ from tqdm import tqdm
 
 from ._config import add_config_defaults, local_config, remote_config
 from ._format import MdFormatter, RstFormatter
+from ._objects import ChangeNote, Contributor
 from ._query import commits_between, contributors, pull_requests_from_commits
 
 logger = logging.getLogger(__name__)
@@ -152,18 +152,24 @@ def main(
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
 
+    print("Formatting notes...", file=sys.stderr)
+    change_notes = ChangeNote.from_pull_requests(
+        pull_requests,
+        pr_summary_regex=config["pr_summary_regex"],
+        pr_summary_label_regex=config["pr_summary_label_regex"],
+    )
+
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
     formatter = Formatter(
         repo_name=org_repo.split("/")[-1],
-        pull_requests=pull_requests,
-        authors=authors,
-        reviewers=reviewers,
+        change_notes=change_notes,
+        authors=Contributor.from_named_users(authors),
+        reviewers=Contributor.from_named_users(reviewers),
         version=version,
         title_template=config["title_template"],
         intro_template=config["intro_template"],
         outro_template=config["outro_template"],
         label_section_map=config["label_section_map"],
-        pr_summary_regex=re.compile(config["pr_summary_regex"], flags=re.MULTILINE),
         ignored_user_logins=config["ignored_user_logins"],
     )
 
@@ -174,7 +180,5 @@ def main(
             io.writelines(formatter.iter_lines())
     else:
         print()
-        for line in formatter.iter_lines():
-            assert line.endswith("\n")
-            assert line.count("\n") == 1
-            print(line, end="", file=sys.stdout)
+        notes = str(formatter)
+        print(notes, file=sys.stdout)

@@ -10,6 +10,8 @@ https://github.com/scientific-python/changelist/blob/main/CHANGELOG.md.
 - Compile a list of pull requests, code authors, and reviewers between
   two given git commits.
 - Categorize pull requests into sections based on GitHub labels.
+- Override pull request titles with more descriptive summaries.
+- Document unrelated changes in a pull requests in separate summaries.
 
 _This project is currently in its alpha stage and might be incomplete or change a lot!_
 
@@ -33,8 +35,35 @@ changelist scientific-python/changelist v0.2.0 main
 
 This will list all pull requests, authors and reviewers that touched commits
 between `v0.2.0` and `main` (excluding `v0.2.0`).
-Pull requests are sorted into section according to the configuration in
+Pull requests are sorted into sections according to the configuration in
 `tool.changelist.label_section_map`.
+
+## Writing pull request summaries
+
+By default, changelist will fall back to the title of a pull request and its
+GitHub labels to sort it into the appropriate section. However, if you want
+longer summaries of your changes you can add a code block with the following
+form anywhere in the description of the pull request:
+
+    ```release-note
+    An ideally expressive description of the change that is included as
+    a single bullet point. Newlines are removed.
+    ```
+
+Sometimes pull requests introduce multiple changes that should be listed in different
+sections. For that reason, a summary block like above can be used more than
+once. Additionally, you can add independent labels to each summary by adding a
+`{label="..."}` anywhere in the summary. These labels are sorted the same way
+as regular pull request labels are. E.g. the two summaries below will go into
+separate sections:
+
+    ```release-note {label="Bug fix"}
+    Make `is_odd()` work for negative numbers.
+    ```
+
+    ```release-note
+    Deprecate `ìs_odd`; use `not (x % 2)` instead! {label="API, Highlight"}
+    ```
 
 ## Configuration
 
@@ -79,17 +108,38 @@ ignored_user_logins = [
 ]
 
 # If this regex matches a pull requests description, the captured content
-# is included instead of the pull request title.
-# E.g. the default regex below is matched by
+# is included instead of the pull request title. E.g. the
+# default regex below is matched by
 #
 # ```release-note
-# An ideally expressive description of the change that is included as a single
-# bullet point. Newlines are removed.
+# An ideally expressive description of the change that is included as
+# a single bullet point. Newlines are removed.
 # ```
 #
 # If you modify this regex, make sure to match the content with a capture
-# group named "summary".
+# group named "summary". The regex is allowed to match more than once in which
+# case a single pull request may result in multiple items (see
+# `pr_summary_label_regex` for why that might be useful).
 pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*^```"
+
+# Sometimes pull requests introduce changes that should be listed in different
+# sections. For that reason, `pr_summary_regex` can match more than once and
+# this regex, `pr_summary_label_regex`, can be used to add independent labels
+# to each summary. These labels are sorted with the `label_section_map` the
+# same way as regular pull request labels are. E.g. the example below will both
+# match and go into separate sections:
+#
+# ```release-note {label="Bug fix"}
+# Make `is_odd()` work for negative numbers.
+# ```
+#
+# ```release-note
+# Deprecate `ìs_odd`; use `not (x % 2)` instead! {label="API, Highlight"}
+# ```
+#
+# If you modify this regex, make sure to match the content with a capture
+# group named "label".
+pr_summary_label_regex = """{[^}]*?label=[\\"](?P<label>[^\\"]+)[^}]*?}"""
 
 # If any of a pull request's labels matches one of the regexes on the left side
 # its summary will appear in the appropriate section with the title given on

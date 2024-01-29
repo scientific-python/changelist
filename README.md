@@ -50,7 +50,7 @@ form anywhere in the description of the pull request:
     a single bullet point. Newlines are removed.
     ```
 
-Sometimes pull requests introduce changes that should be listed in different
+Sometimes pull requests introduce multiple changes that should be listed in different
 sections. For that reason, a summary block like above can be used more than
 once. Additionally, you can add independent labels to each summary by adding a
 `{label="..."}` anywhere in the summary. These labels are sorted the same way

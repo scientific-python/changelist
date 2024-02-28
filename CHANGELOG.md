@@ -1,3 +1,52 @@
+# changelist 0.5
+
+We're happy to announce the release of changelist 0.5!
+
+## Enhancements
+
+- Allow multiple summaries per pull request ([#53](https://github.com/scientific-python/changelist/pull/53)).
+
+## Bug Fixes
+
+- Add newline after release title ([#50](https://github.com/scientific-python/changelist/pull/50)).
+
+## Documentation
+
+- Ensure README is synched with code ([#43](https://github.com/scientific-python/changelist/pull/43)).
+- Make README intro more succinct ([#54](https://github.com/scientific-python/changelist/pull/54)).
+
+## Maintenance
+
+- Use trusted publisher ([#48](https://github.com/scientific-python/changelist/pull/48)).
+- Ensure README is synched with code ([#43](https://github.com/scientific-python/changelist/pull/43)).
+- Bump actions/checkout from 3 to 4 ([#51](https://github.com/scientific-python/changelist/pull/51)).
+- Bump pre-commit from 3.4.0 to 3.5.0 ([#52](https://github.com/scientific-python/changelist/pull/52)).
+- Bump actions/setup-python from 4 to 5 ([#57](https://github.com/scientific-python/changelist/pull/57)).
+- Bump pre-commit from 3.5.0 to 3.6.0 ([#56](https://github.com/scientific-python/changelist/pull/56)).
+- Bump actions/setup-python from 4 to 5 ([#59](https://github.com/scientific-python/changelist/pull/59)).
+- Use setup-python pip cache ([#60](https://github.com/scientific-python/changelist/pull/60)).
+- Add Python 3.12 support ([#61](https://github.com/scientific-python/changelist/pull/61)).
+
+## Contributors
+
+5 authors added to this release (alphabetically):
+
+- [@dependabot[bot]](https://github.com/apps/dependabot)
+- Brigitta Sipőcz ([@bsipocz](https://github.com/bsipocz))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Lars Grüter ([@lagru](https://github.com/lagru))
+- Stefan van der Walt ([@stefanv](https://github.com/stefanv))
+
+4 reviewers added to this release (alphabetically):
+
+- Brigitta Sipőcz ([@bsipocz](https://github.com/bsipocz))
+- Jarrod Millman ([@jarrodmillman](https://github.com/jarrodmillman))
+- Lars Grüter ([@lagru](https://github.com/lagru))
+- Stefan van der Walt ([@stefanv](https://github.com/stefanv))
+
+_These lists are automatically generated, and may not be complete or may contain
+duplicates._
+
 # changelist 0.4
 
 We're happy to announce the release of changelist 0.4!

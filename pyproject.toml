@@ -34,7 +34,7 @@ dependencies = [
 changelist = "changelist.__main__:main"
 
 [project.optional-dependencies]
-lint = ["pre-commit == 3.7.0"]
+lint = ["pre-commit == 3.7.1"]
 test = ["pytest", "pytest-cov"]
 
 [tool.ruff]

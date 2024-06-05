@@ -179,6 +179,8 @@ def main(
                 for key, value in optional_deps.items()
                 if key in config["show_optional_dependencies"]
             }
+        else:
+            optional_deps = {}
 
     print("Formatting notes...", file=sys.stderr)
     change_notes = ChangeNote.from_pull_requests(

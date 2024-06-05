@@ -60,6 +60,19 @@ pr_summary_regex = "^```release-note\\s*(?P<summary>[\\s\\S]*?\\w[\\s\\S]*?)\\s*
 # group named "label".
 pr_summary_label_regex = """{[^}]*?label=[\\"](?P<label>[^\\"]+)[^}]*?}"""
 
+# Show the required Python version if `project.requires-python` is present
+# in the pyproject.toml at the last given revision.
+show_required_python = true
+
+# Show the required dependencies if `project.dependencies` is present
+# in the pyproject.toml at the last given revision.
+show_required_dependencies = true
+
+# Show the given optional dependencies if `project.optional-dependencies` is
+# present in the pyproject.toml at the last given revision.
+# E.g. ["test"]
+show_optional_dependencies = []
+
 # If any of a pull request's labels matches one of the regexes on the left side
 # its summary will appear in the appropriate section with the title given on
 # the right side. If a pull request doesn't match one of these categories it is

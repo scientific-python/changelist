@@ -13,7 +13,12 @@ from tqdm import tqdm
 from ._config import add_config_defaults, local_config, remote_config
 from ._format import MdFormatter, RstFormatter
 from ._objects import ChangeNote, Contributor
-from ._query import commits_between, contributors, pull_requests_from_commits
+from ._query import (
+    commits_between,
+    contributors,
+    pull_requests_from_commits,
+    pyproject_dependencies,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -152,6 +157,29 @@ def main(
         pull_requests=lazy_tqdm(pull_requests, desc="Fetching reviewers"),
     )
 
+    python_dep = None
+    required_deps = []
+    optional_deps = {}
+    if config.keys() & {
+        "show_required_python",
+        "show_required_dependencies",
+        "show_optional_dependencies",
+    }:
+        print("Fetching dependencies...", file=sys.stderr)
+        python_dep, required_deps, optional_deps = pyproject_dependencies(
+            gh, org_repo, stop_rev
+        )
+        if not config["show_required_python"]:
+            python_dep = None
+        if not config["show_required_dependencies"]:
+            required_deps = []
+        if config["show_optional_dependencies"]:
+            optional_deps = {
+                key: value
+                for key, value in optional_deps.items()
+                if key in config["show_optional_dependencies"]
+            }
+
     print("Formatting notes...", file=sys.stderr)
     change_notes = ChangeNote.from_pull_requests(
         pull_requests,
@@ -165,6 +193,9 @@ def main(
         change_notes=change_notes,
         authors=Contributor.from_named_users(authors),
         reviewers=Contributor.from_named_users(reviewers),
+        required_python=python_dep,
+        required_dependencies=required_deps,
+        optional_dependencies=optional_deps,
         version=version,
         title_template=config["title_template"],
         intro_template=config["intro_template"],

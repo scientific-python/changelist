@@ -37,6 +37,9 @@ changelist = "changelist.__main__:main"
 lint = ["pre-commit == 3.7.1"]
 test = ["pytest", "pytest-cov"]
 
+[tool.changelist]
+ignored_user_logins = ["dependabot[bot]", "pre-commit-ci[bot]", "web-flow"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py39"

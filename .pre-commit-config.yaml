@@ -25,21 +25,12 @@ repos:
         files: \.(css|html|md|yml|yaml|toml)
         args: [--prose-wrap=preserve]
 
-  - repo: https://github.com/psf/black
-    rev: 3702ba224ecffbcec30af640c149f231d90aebdb # frozen: 24.4.2
-    hooks:
-      - id: black
-
-  - repo: https://github.com/adamchainz/blacken-docs
-    rev: 4c97c4a0d921007af6fefae92d8447cfbf63720b # frozen: 1.18.0
-    hooks:
-      - id: blacken-docs
-
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: 1dc9eb131c2ea4816c708e4d85820d2cc8542683 # frozen: v0.5.0
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
+        args: ["--fix", "--show-fixes", "--exit-non-zero-on-fix"]
+      - id: ruff-format
 
   - repo: local
     hooks:

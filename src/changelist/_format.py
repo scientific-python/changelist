@@ -17,6 +17,9 @@ class MdFormatter:
     change_notes: set[ChangeNote]
     authors: set[Contributor]
     reviewers: set[Contributor]
+    required_python: str
+    required_dependencies: Iterable[str]
+    optional_dependencies: dict[str, Iterable[str]]
 
     version: str
     title_template: str
@@ -51,6 +54,11 @@ class MdFormatter:
         yield from self._format_intro()
         for title, notes in self._notes_by_section.items():
             yield from self._format_change_section(title, notes)
+        yield from self._format_dependencies_section(
+            required_python=self.required_python,
+            required_dependencies=self.required_dependencies,
+            optional_dependencies=self.optional_dependencies,
+        )
         yield from self._format_contributor_section(self.authors, self.reviewers)
         yield from self._format_outro()
 
@@ -145,6 +153,39 @@ class MdFormatter:
         reviewers_lines = map(self._format_contributor_line, reviewers)
         yield from sorted(reviewers_lines, key=lambda s: s.lower())
         yield "\n"
+
+    def _format_dependencies_section(
+        self, required_python, required_dependencies, optional_dependencies
+    ):
+        if required_python or required_dependencies or optional_dependencies:
+            yield from self._format_section_title("Dependencies", level=2)
+            yield "\n"
+
+        if required_python:
+            yield f"Python `{required_python}` is required.\n"
+            yield "\n"
+
+        if required_dependencies:
+            yield "Required dependencies:\n"
+            yield "\n"
+            for dep in sorted(required_dependencies, key=lambda x: x.lower()):
+                line = f"`{dep}`"
+                line = self._sanitize_text(line)
+                yield f"- {line}\n"
+            yield "\n"
+
+        if optional_dependencies:
+            yield "Optional dependencies:\n"
+            yield "\n"
+            for name, deps in optional_dependencies.items():
+                line = f"`{name}`"
+                line = self._sanitize_text(line)
+                yield f"- {line}\n"
+                for dep in sorted(deps, key=lambda x: x.lower()):
+                    line = f"`{dep}`"
+                    line = self._sanitize_text(line)
+                    yield f"  - {line}\n"
+            yield "\n"
 
     def _format_intro(self):
         intro = self.intro_template.format(

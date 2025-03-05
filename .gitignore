@@ -143,6 +143,9 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
+# JetBrains IDEs project settings
+.idea
+
 # mkdocs documentation
 /site
 

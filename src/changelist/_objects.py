@@ -2,7 +2,7 @@ import logging
 import re
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Union
+from typing import Optional, Union
 
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
@@ -27,6 +27,7 @@ class ChangeNote:
         *,
         pr_summary_regex: str,
         pr_summary_label_regex: str,
+        ignore_prs_by_username: Optional[list[str]] = None,
     ) -> "set[ChangeNote]":
         """Create a set of notes from pull requests.
 
@@ -39,12 +40,25 @@ class ChangeNote:
         requests and notes somewhat. While ideally, a pull request introduces
         a change that would be described in a single note, this is often not
         the case.
+
+        `ignore_prs_by_username` is a list of user logins whose pull requests
+        should be excluded from the changelog entirely.
         """
+        if ignore_prs_by_username is None:
+            ignore_prs_by_username = []
+
         pr_summary_regex = re.compile(pr_summary_regex, flags=re.MULTILINE)
         pr_summary_label_regex = re.compile(pr_summary_label_regex)
 
         notes = set()
         for pr in pull_requests:
+            if pr.user and pr.user.login in ignore_prs_by_username:
+                logger.debug(
+                    "skipping PR %s from ignored user %s",
+                    pr.html_url,
+                    pr.user.login,
+                )
+                continue
             pr_labels = tuple(label.name for label in pr.labels)
 
             if not pr.body or not (

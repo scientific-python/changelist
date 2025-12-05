@@ -13,6 +13,28 @@ logger = logging.getLogger(__name__)
 DEFAULT_CONFIG_PATH = Path(__file__).parent / "default_config.toml"
 
 
+def _dereference_ignore_prs_by_username(config: dict) -> dict:
+    """Dereference "include" in `ignore_prs_by_username` field.
+
+    Example:
+    >>> config = {
+    ...     "ignored_user_logins": ["bot"],
+    ...     "ignore_prs_by_username": [{"include": "ignored_user_logins"}, "web-flow"]
+    ... }
+    >>> _dereference_ignore_prs_by_username(config)
+    {'ignored_user_logins': ['bot'], 'ignore_prs_by_username': ['web-flow', 'bot']}
+    """
+    if "ignore_prs_by_username" not in config:
+        return config
+
+    include_sentinel = {"include": "ignored_user_logins"}
+    if include_sentinel in config["ignore_prs_by_username"]:
+        config["ignore_prs_by_username"].remove(include_sentinel)
+        config["ignore_prs_by_username"] += config.get("ignored_user_logins", [])
+
+    return config
+
+
 def remote_config(gh: Github, org_repo: str, *, rev: str):
     """Return configuration options in remote pyproject.toml if they exist."""
     repo = gh.get_repo(org_repo)
@@ -50,4 +72,5 @@ def add_config_defaults(
         if key not in config:
             config[key] = value
             logger.debug("using default config value for %s", key)
+    config = _dereference_ignore_prs_by_username(config)
     return config

@@ -102,9 +102,17 @@ _These lists are automatically generated, and may not be complete or may contain
 duplicates._
 """
 
-# Profiles that are excluded from the contributor list.
+# Usernames that are excluded from the contributor list. This may also ignore
+# pull request of these users (see field `ignore_prs_by_username`).
 ignored_user_logins = [
     "web-flow",
+]
+
+# Ignore pull requests authored by these users.
+# If `{include = "ignored_user_logins"}` is included in this list (the default),
+# usernames from the field `ignored_user_logins` are also included.
+ignore_prs_by_username = [
+    {include = "ignored_user_logins"},
 ]
 
 # If this regex matches a pull requests description, the captured content
@@ -228,7 +236,7 @@ jobs:
     name: attach to PR
     runs-on: ubuntu-latest
     steps:
-      - uses: scientific-python/attach-next-milestone-action@bc07be829f693829263e57d5e8489f4e57d3d420
+      - uses: scientific-python/attach-next-milestone-action@c9cfab10ad0c67fed91b01103db26b7f16634639
         with:
           token: ${{ secrets.MILESTONE_LABELER_TOKEN }}
           force: true

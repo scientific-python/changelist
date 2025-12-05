@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 from typing import Union
@@ -10,6 +10,13 @@ here = Path(__file__).parent
 
 
 DEFAULT_CONFIG = local_config(DEFAULT_CONFIG_PATH)
+
+
+@dataclass
+class _MockUser:
+    """Mocks github.User partially."""
+
+    login: str
 
 
 @dataclass
@@ -26,6 +33,7 @@ class _MockPullRequest:
     title: str
     body: Union[str, None]
     labels: list[_MockLabel]
+    user: _MockUser = field(default_factory=lambda: _MockUser(login="friendlyDev"))
     number: int = (42,)
     html_url: str = "https://github.com/scientific-python/changelist/pull/53"
     merged_at: datetime = datetime(2024, 1, 1)
@@ -72,6 +80,40 @@ Make `is_odd()` work for negative numbers.
         assert len(caplog.records) == 1
         assert caplog.records[0].levelname == "DEBUG"
         assert "falling back to PR labels for summary" in caplog.records[0].msg
+
+    def test_from_pull_requests_ignore_by_username(self, caplog):
+        caplog.set_level("DEBUG")
+        pull_requests = [
+            _MockPullRequest(
+                title="PR from user",
+                body=None,
+                labels=[_MockLabel("Documentation")],
+                user=_MockUser("someDev"),
+            ),
+            _MockPullRequest(
+                title="PR from bot",
+                body=None,
+                labels=[_MockLabel("Documentation")],
+                user=_MockUser("bot"),
+            ),
+        ]
+        notes = ChangeNote.from_pull_requests(
+            pull_requests,
+            pr_summary_regex=DEFAULT_CONFIG["pr_summary_regex"],
+            pr_summary_label_regex=DEFAULT_CONFIG["pr_summary_label_regex"],
+            ignore_prs_by_username=["bot"],
+        )
+        assert len(notes) == 1
+        notes = list(notes)
+        assert notes[0].content == "PR from user"
+        assert notes[0].labels == ("Documentation",)
+
+        assert len(caplog.records) == 2
+        assert caplog.records[0].levelname == "DEBUG"
+        assert "falling back to title" in caplog.records[0].msg
+
+        assert caplog.records[1].levelname == "DEBUG"
+        assert "skipping PR %s from ignored user %s" in caplog.records[1].msg
 
     def test_from_pull_requests_fallback_title(self, caplog):
         caplog.set_level("DEBUG")

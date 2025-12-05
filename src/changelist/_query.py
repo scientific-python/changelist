@@ -4,8 +4,13 @@ import os
 from collections.abc import Iterable
 from dataclasses import dataclass
 
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
+
 import requests
-from github import Github
+from github import Github, UnknownObjectException
 from github.Commit import Commit
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
@@ -174,3 +179,26 @@ def contributors(
                 reviewers.add(review.user)
 
     return authors, reviewers
+
+
+def pyproject_dependencies(
+    gh: Github,
+    org_repo: str,
+    rev: str,
+) -> tuple[str | None, list[str], dict[str, list[str]]]:
+    """Fetch dependencies from pyproject.toml at the given revision."""
+    repo = gh.get_repo(org_repo)
+    try:
+        file = repo.get_contents("pyproject.toml", ref=rev)
+        logger.debug("found pyproject.toml in %s@%s", org_repo, rev)
+        content = file.decoded_content.decode()
+    except UnknownObjectException:
+        content = ""
+    pyproject = tomllib.loads(content)
+    pyproject = pyproject.get("project", {})
+
+    python_dep = pyproject.get("requires-python")
+    runtime_deps = pyproject.get("dependencies", [])
+    extra_deps = pyproject.get("optional-dependencies", {})
+
+    return python_dep, runtime_deps, extra_deps

@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Union
 
+from github import GithubException
 from github.NamedUser import NamedUser
 from github.PullRequest import PullRequest
 
@@ -126,11 +127,16 @@ class Contributor:
         """ """
         contributors = set()
         for user in named_users:
-            contributors.add(
-                cls(
-                    name=user.name,
-                    login=user.login,
-                    reference_url=user.html_url,
+            try:
+                contributors.add(
+                    cls(
+                        name=user.name,
+                        login=user.login,
+                        reference_url=user.html_url,
+                    )
                 )
-            )
+            except GithubException as e:
+                # Safely fallback to the login handle if the object is missing (404)
+                print(f"\n[Warning] Skipped missing or deleted user: {getattr(user, 'login', 'Unknown')}")
+                continue
         return contributors

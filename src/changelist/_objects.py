@@ -135,8 +135,13 @@ class Contributor:
                         reference_url=user.html_url,
                     )
                 )
-            except GithubException as e:
+            except GithubException as error:
                 # Safely fallback to the login handle if the object is missing (404)
-                print(f"\n[Warning] Skipped missing or deleted user: {getattr(user, 'login', 'Unknown')}")
+                logger.warning(
+                    "Error while fetching contributor info: %s\n(user=%r, error=%r)",
+                    getattr(user, "login", "[Unknown login]"),
+                    user,
+                    error,
+                )
                 continue
         return contributors

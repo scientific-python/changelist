@@ -6,17 +6,17 @@ build-backend = "setuptools.build_meta"
 name = "changelist"
 version = "0.6rc0.dev0"
 # TODO add slots=True, kw_only=True to dataclasses starting with >=3.10
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 readme = "README.md"
 license = {file = "LICENSE.txt"}
 classifiers = [
   "Development Status :: 3 - Alpha",
   "License :: OSI Approved :: BSD License",
   "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.9",
-  "Programming Language :: Python :: 3.10",
-  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
   "Programming Language :: Python :: 3 :: Only",
 ]
 

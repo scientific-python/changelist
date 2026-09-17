@@ -9,7 +9,7 @@ ci:
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: cef0300fd0fc4d2a87a85fa2093c6b283ea36f4b # frozen: v5.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -25,21 +25,21 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/rbubley/mirrors-prettier
-    rev: bc7af46104f0f5368b95878decf720f9f00c2559 # frozen: v3.4.2
+    rev: b40b4e02d5a0c977e64da51e8742e3240ef6372a # frozen: v3.9.7
     hooks:
       - id: prettier
         files: \.(css|html|md|yml|yaml|toml)
         args: [--prose-wrap=preserve]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: f0b5944bef86f50d875305821a0ab0d8c601e465 # frozen: v0.8.4
+    rev: 2eeb5678de71a00c0902cbda7105d328432f72cb # frozen: v0.16.8
     hooks:
       - id: ruff
         args: ["--fix", "--show-fixes", "--exit-non-zero-on-fix"]
       - id: ruff-format
 
   - repo: https://github.com/codespell-project/codespell
-    rev: "193cd7d27cd571f79358af09a8fb8997e54f8fff" # frozen: v2.3.0
+    rev: "57b21406f092110c18776e39b0bda50d37c945c8" # frozen: v2.4.3
     hooks:
       - id: codespell
 

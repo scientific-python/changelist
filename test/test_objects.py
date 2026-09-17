@@ -31,7 +31,7 @@ class _MockPullRequest:
     """Mocks github.PullRequest.PullRequest partially."""
 
     title: str
-    body: Union[str, None]
+    body: str | None
     labels: list[_MockLabel]
     user: _MockUser = field(default_factory=lambda: _MockUser(login="friendlyDev"))
     number: int = (42,)

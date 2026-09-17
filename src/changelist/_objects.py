@@ -27,7 +27,7 @@ class ChangeNote:
         *,
         pr_summary_regex: str,
         pr_summary_label_regex: str,
-        ignore_prs_by_username: Optional[list[str]] = None,
+        ignore_prs_by_username: list[str] | None = None,
     ) -> "set[ChangeNote]":
         """Create a set of notes from pull requests.
 
@@ -112,7 +112,7 @@ class Contributor:
      contributor's GitHub profile.
     """
 
-    name: Union[str, None]
+    name: str | None
     login: str
     reference_url: str
 

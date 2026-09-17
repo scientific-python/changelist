@@ -3,8 +3,8 @@ import logging
 import os
 import sys
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
-from typing import Callable
 
 import requests_cache
 from github import Github
@@ -162,7 +162,7 @@ def main(
 
     Formatter = {"md": MdFormatter, "rst": RstFormatter}[format]
     formatter = Formatter(
-        repo_name=org_repo.split("/")[-1],
+        repo_name=org_repo.rsplit("/", maxsplit=1)[-1],
         change_notes=change_notes,
         authors=Contributor.from_named_users(authors),
         reviewers=Contributor.from_named_users(reviewers),
